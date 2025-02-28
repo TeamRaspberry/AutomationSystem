@@ -16,13 +16,25 @@
     src: files/docker-compose.yml
     dest: /opt/monitoring/docker-compose.yml
 
-- name: Настройка конфигурации Prometheus
+- name: Копирование конфигурации Loki
+  copy:
+    src: files/loki-config.yml
+    dest: /opt/monitoring/loki-config.yml
+    mode: '0644'
+
+- name: Копирование конфигурации Promtail
+  copy:
+    src: files/promtail.yml
+    dest: /opt/monitoring/promtail.yml
+    mode: '0644'
+
+- name: Копирование конфигурации Prometheus
   template:
     src: templates/prometheus.yml.j2
     dest: /opt/monitoring/prometheus.yml
     mode: '0644'
 
-- name: Запуск сборки сборки крнтейнеров и мониторинга системы
+- name: Запуск сборки крнтейнеров и мониторинга системы
   shell: |
     cd /opt/monitoring
     docker-compose up -d
