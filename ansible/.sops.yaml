@@ -1,0 +1,3 @@
+creation_rules:
+  - pgp: "44C9E1969BDCF8BA9A74B2DA615699B082134C8E" 
+    path_regex: secrets.*

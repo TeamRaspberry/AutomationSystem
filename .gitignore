@@ -1,0 +1,2 @@
+ansible/group_vars/all/secrets.yaml
+ansible/inventory.ini

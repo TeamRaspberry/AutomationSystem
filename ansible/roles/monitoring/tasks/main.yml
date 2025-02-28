@@ -1,0 +1,30 @@
+- name: Установка инструментов
+  apt:
+    name:
+      - docker.io
+      - docker-compose
+    state: present
+    update_cache: yes
+
+- name: Создание рабочей директории для мониторинга
+  file:
+    path: /opt/monitoring
+    state: directory
+
+- name: Копирование файлов Docker Compose
+  copy:
+    src: files/docker-compose.yml
+    dest: /opt/monitoring/docker-compose.yml
+
+- name: Настройка конфигурации Prometheus
+  template:
+    src: templates/prometheus.yml.j2
+    dest: /opt/monitoring/prometheus.yml
+    mode: '0644'
+
+- name: Запуск сборки сборки крнтейнеров и мониторинга системы
+  shell: |
+    cd /opt/monitoring
+    docker-compose up -d
+  args:
+    chdir: /opt/monitoring
