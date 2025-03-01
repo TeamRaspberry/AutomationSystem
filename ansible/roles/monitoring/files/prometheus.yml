@@ -1,0 +1,33 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['prometheus:9090']
+    basic_auth:
+      username: 'admin'
+      password: 'admin'
+
+  - job_name: 'docker_containers'
+    docker_sd_configs:
+      - host: 'unix:///var/run/docker.sock'
+    metrics_path: /metrics
+    relabel_configs:
+      - source_labels: [__meta_docker_container_name]
+        target_label: 'container_name'
+      - source_labels: [__meta_docker_container_id]
+        target_label: 'container_id'
+      - source_labels: [__meta_docker_container_image]
+        target_label: 'container_image'
+      - source_labels: [__meta_docker_container_name]
+        regex: '(/)?prometheus(/)?'
+        action: drop
+
+  # - job_name: 'node'
+  #   static_configs:
+  #     - targets: ['node-exporter:9100']
+  #   metrics_path: /metrics
+
+
+      
