@@ -30,6 +30,7 @@
   loop:
     - /opt/monitoring
     - /opt/monitoring/volumes
+    - /opt/monitoring/grafana/dashboards
     - /opt/monitoring/grafana/provisioning/datasources
     - /opt/monitoring/grafana/provisioning/dashboards
     - /opt/monitoring/grafana/dashboards
@@ -43,8 +44,8 @@
     mode: '0644'
   loop:
     - { src: 'docker-compose.yml', dest: 'docker-compose.yml' }
-    - { src: 'prometheus.yml', dest: 'prometheus.yml' }
-    - { src: 'web.config.yml', dest: 'web.config.yml' }
+    - { src: 'prometheus/prometheus.yml', dest: 'prometheus.yml' }
+    - { src: 'prometheus/web.config.yml', dest: 'web.config.yml' }
     - { src: 'grafana/provisioning/datasources/prometheus.yml', dest: 'grafana/provisioning/datasources/prometheus.yml' }
     - { src: 'grafana/provisioning/datasources/loki.yml', dest: 'grafana/provisioning/datasources/loki.yml' }
     - { src: 'grafana/dashboards/system_monitoring.json', dest: 'grafana/dashboards/system_monitoring.json' }

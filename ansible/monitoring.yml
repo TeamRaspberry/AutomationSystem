@@ -1,0 +1,6 @@
+---
+- name: Deploy Monitoring
+  hosts: servers
+  become: true 
+  roles:
+    - monitoring
