@@ -48,6 +48,7 @@ services:
       - GF_AUTH_DISABLE_LOGIN_FORM=false
       - GF_DATAPROXY_TIMEOUT=30
       - GF_DATAPROXY_SEND_USER_HEADER=true
+      - GF_FEATURE_TOGGLES_ENABLE=publicDashboards
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
@@ -55,6 +56,7 @@ services:
       - ./grafana/dashboards:/etc/grafana/dashboards
     depends_on:
       - prometheus
+      - loki
     networks:
       - monitoring
 
@@ -80,9 +82,45 @@ services:
     networks:
       - monitoring
 
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: loki
+    restart: unless-stopped
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki/config.yml:/etc/loki/local-config.yaml
+      - loki_data:/loki
+    networks:
+      - monitoring
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 256M
+
+  promtail:
+    image: grafana/promtail:2.9.0
+    container_name: promtail
+    restart: unless-stopped
+    volumes:
+      - ./promtail/config.yml:/etc/promtail/config.yml
+      - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
+    networks:
+      - monitoring
+    user: root
+
 volumes:
   prometheus_data:
   grafana_data:
+  loki_data:
 
 networks:
   monitoring:

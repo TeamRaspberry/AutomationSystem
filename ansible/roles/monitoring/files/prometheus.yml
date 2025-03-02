@@ -24,10 +24,5 @@ scrape_configs:
         regex: '(/)?prometheus(/)?'
         action: drop
 
-  - job_name: 'node'
-    static_configs:
-      - targets: ['node-exporter:9100']
-    metrics_path: /metrics
-
 
       
